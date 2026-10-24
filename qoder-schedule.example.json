@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "times": [
+    "10:05",
+    "21:30"
+  ],
+  "jitter_minutes": 5
+}

@@ -1,0 +1,28 @@
+[Unit]
+Description=Qoder Model Filter & Reverse Proxy Layer
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/qoder2api
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONOPTIMIZE=2
+Environment=MALLOC_TRIM_THRESHOLD_=100000
+Environment=QODER_UPSTREAM=http://127.0.0.1:8790
+Environment=QODER_PORT=8791
+Environment=QODER_CONFIG_FILE=/opt/qoder2api/blocked-models.json
+Environment=QODER_KEYS_FILE=/opt/qoder2api/admin/keys.json
+Environment=QODER_KEY_CHECK=1
+ExecStart=/usr/bin/python3 /opt/qoder2api/qoder-model-filter.py
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qoder-model-filter
+
+[Install]
+WantedBy=multi-user.target

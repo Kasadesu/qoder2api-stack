@@ -1,0 +1,25 @@
+# Caddyfile Example for Qoder Independent Stack
+# Replace api.example.com with your actual domain
+
+api.example.com {
+    encode gzip
+
+    # Admin Control Panel (Port 8792)
+    handle /admin* {
+        uri strip_prefix /admin
+        # Optional: Enable Caddy BasicAuth layer if required
+        # basicauth {
+        #     admin __BASICAUTH_HASH__
+        # }
+        reverse_proxy 127.0.0.1:8792 {
+            flush_interval -1
+        }
+    }
+
+    # API Gateway Reverse Proxy with Model Filtering (Port 8791)
+    handle {
+        reverse_proxy 127.0.0.1:8791 {
+            flush_interval -1
+        }
+    }
+}

@@ -1,0 +1,11 @@
+services:
+  qoder2api-hub:
+    image: shuishuipingan/qoder2api-hub:latest
+    container_name: qoder2api-hub
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8790:8790"
+    volumes:
+      - /opt/qoder2api/hub-data:/app/data
+    environment:
+      - TZ=Asia/Shanghai

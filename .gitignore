@@ -1,0 +1,10 @@
+# Credentials and dynamic states
+keys.json
+qoder.json
+blocked-models.json
+credentials.txt
+basicauth.hash
+*.bak
+*.tmp
+*.log
+__pycache__/

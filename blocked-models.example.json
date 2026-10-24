@@ -1,0 +1,7 @@
+{
+  "models": [
+    "Auto",
+    "MiniMax-M2.7"
+  ],
+  "context_length": 360000
+}

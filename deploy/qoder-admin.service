@@ -1,0 +1,31 @@
+[Unit]
+Description=Qoder Admin Web Console & Scheduler Daemon
+After=network-online.target qoder-filter.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/qoder2api
+Environment=PYTHONUNBUFFERED=1
+Environment=QODER_ADMIN_HOST=127.0.0.1
+Environment=QODER_ADMIN_PORT=8792
+Environment=QODER_ADMIN_DIR=/opt/qoder2api/admin
+Environment=QODER_CFG_FILE=/opt/qoder2api/admin/qoder.json
+Environment=QODER_BLOCK_FILE=/opt/qoder2api/blocked-models.json
+Environment=QODER_SCHEDULE_FILE=/opt/qoder2api/admin/qoder-schedule.json
+Environment=QODER_KEYS_FILE=/opt/qoder2api/admin/keys.json
+Environment=QODER_CRED_FILE=/opt/qoder2api/admin/credentials.txt
+Environment=QODER_HASH_FILE=/opt/qoder2api/admin/basicauth.hash
+Environment=CADDY_FILE=/etc/caddy/Caddyfile
+ExecStart=/usr/bin/python3 /opt/qoder2api/qoder-admin.py
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qoder-admin
+
+[Install]
+WantedBy=multi-user.target
