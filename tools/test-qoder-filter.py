@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Comprehensive test suite for qoder-model-filter."""
+"""Unit tests for qoder-model-filter."""
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import importlib.util
 import json

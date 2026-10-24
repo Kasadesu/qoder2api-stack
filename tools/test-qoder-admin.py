@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Comprehensive test suite for qoder-admin."""
+"""Unit tests for qoder-admin."""
 import importlib.util
 import json
 import os

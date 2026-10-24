@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""High-performance filtering and rewriting reverse proxy for Qoder upstream."""
 from concurrent.futures import ThreadPoolExecutor
 from http.client import BadStatusLine, CannotSendRequest, HTTPConnection, HTTPSConnection, RemoteDisconnected
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -44,8 +43,6 @@ _SSL_CTX = None
 
 
 class _UpstreamPool:
-    """Thread-safe HTTP/HTTPS Keep-Alive connection pool."""
-
     def __init__(self, max_per_host=16, idle_timeout=55.0):
         self._max_per_host = max_per_host
         self._idle_timeout = idle_timeout
@@ -197,7 +194,6 @@ def _config(path=None):
 
 
 def load_valid_keys(keys_path=None):
-    """Load valid keys with mtime/size caching. Fail-Closed on errors."""
     target = keys_path or KEYS_FILE
     try:
         st = os.stat(target)
@@ -246,7 +242,6 @@ def load_valid_keys(keys_path=None):
 
 
 def _extract_model_fast(body):
-    """Extract model from JSON body quickly without full deserialization for large requests."""
     if not body:
         return ""
     if len(body) <= FAST_MODEL_PARSE_LIMIT:
@@ -265,7 +260,6 @@ def _extract_model_fast(body):
 
 
 def rewrite_models(payload, block, ctx):
-    """Apply model filtering and context_length / max_input_tokens override."""
     data = payload.get("data") if isinstance(payload, dict) else None
     if not isinstance(data, list):
         return payload

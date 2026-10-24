@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Comprehensive test suite for Qoder check-in scheduler and jitter logic."""
+"""Unit tests for Qoder check-in scheduler and jitter logic."""
 import importlib.util
 import os
 import sys

@@ -44,9 +44,7 @@ QODER_SCHEDULE_LOCK = threading.RLock()
 QODER_SCHEDULE_STATE = {"fired": "", "last_ok": None, "last_error": "", "last_at": 0}
 
 
-# ==============================================================================
-# Helper utilities
-# ==============================================================================
+# --- Helper utilities
 
 def _atomic_write_json(filepath, data, mode=0o600):
     os.makedirs(os.path.dirname(os.path.abspath(filepath)), exist_ok=True)
@@ -74,12 +72,9 @@ def _float(v):
         return None
 
 
-# ==============================================================================
-# Credentials & Session Security
-# ==============================================================================
+# --- Credentials & Session Security
 
 def get_admin_password():
-    """Retrieve plaintext admin password from credentials.txt or initialize default."""
     if os.path.exists(CRED_FILE):
         try:
             with open(CRED_FILE, "r", encoding="utf-8") as f:
@@ -110,7 +105,6 @@ def verify_admin_password(password):
 
 
 def sync_caddy_hash(new_password):
-    """Attempt to generate bcrypt hash using caddy command and patch Caddyfile."""
     try:
         res = subprocess.run(
             ["caddy", "hash-password", "--plaintext", new_password],
@@ -177,9 +171,7 @@ def validate_session(token):
     return False
 
 
-# ==============================================================================
-# Qoder Upstream Gateway Calls
-# ==============================================================================
+# --- Qoder Upstream Gateway Calls
 
 def qoder_conf():
     try:
@@ -235,9 +227,7 @@ def _qoder_call(path, method="GET", body=None, panel=False, timeout=30):
         return json.loads(resp.read().decode("utf-8", "ignore"))
 
 
-# ==============================================================================
-# Accounts Pool & Credits
-# ==============================================================================
+# --- Accounts Pool & Credits
 
 def qoder_accounts_info():
     d = _qoder_call("/accounts", panel=True)
@@ -441,9 +431,7 @@ def qoder_recent_usage(limit=RECENT_USAGE_LIMIT):
     return {"ok": True, "records": out}
 
 
-# ==============================================================================
-# Model Catalog & Blocked Filtering
-# ==============================================================================
+# --- Model Catalog & Blocked Filtering
 
 def _qoder_rate_text(m):
     eff = _float(m.get("price_factor"))
@@ -527,9 +515,7 @@ def qoder_model_rows():
     }
 
 
-# ==============================================================================
-# Schedule Management
-# ==============================================================================
+# --- Schedule Management
 
 def _qoder_norm_times(values):
     out = set()
@@ -671,9 +657,7 @@ def start_qoder_scheduler():
     return t
 
 
-# ==============================================================================
-# Multi-tenant API Keys Management
-# ==============================================================================
+# --- Multi-tenant API Keys Management
 
 def load_keys():
     try:
@@ -730,9 +714,7 @@ def delete_key(key_id):
     raise ValueError("Key not found")
 
 
-# ==============================================================================
-# Obsidian Minimal UI Template
-# ==============================================================================
+# --- Obsidian Minimal UI Template
 
 UI_HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -1317,9 +1299,7 @@ body { background: #111113; color: #f4f4f5; display: flex; align-items: center; 
 """
 
 
-# ==============================================================================
-# HTTP Request Handler & Server
-# ==============================================================================
+# --- HTTP Request Handler & Server
 
 class AdminHandler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
@@ -1359,14 +1339,12 @@ class AdminHandler(BaseHTTPRequestHandler):
             return {}
 
     def _is_authenticated(self):
-        # 1. Check Bearer token from header
         auth = self.headers.get("Authorization", "")
         if auth.startswith("Bearer "):
             token = auth[7:].strip()
             if validate_session(token) or verify_admin_password(token):
                 return True
 
-        # 2. Check Session Cookie
         cookie_hdr = self.headers.get("Cookie")
         if cookie_hdr:
             c = SimpleCookie()
@@ -1393,7 +1371,6 @@ class AdminHandler(BaseHTTPRequestHandler):
             self._send_html(200, LOGIN_HTML.replace("__ERROR__", ""))
             return
 
-        # Check authentication for web page or APIs
         if not self._is_authenticated():
             if path.startswith("/api/"):
                 self._send_json(401, {"ok": False, "error": "Unauthorized"})
